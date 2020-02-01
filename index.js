@@ -3,8 +3,7 @@
 const { writeFile } = require("fs");
 const axios = require("axios");
 const inquirer = require("inquirer");
-// const pdf = require("html-pdf");
-// const html = fs.readFileSync("devInfo.html", "utf8");
+// const puppeteer = require("puppeteer");
 
 async function promptUser() {
   try {
@@ -18,8 +17,10 @@ async function promptUser() {
         type: "list",
         name: "favecolor",
         message: "Choose Your Favorite Color",
-        choices: ["Purple", "Green", "Navy", "Black"]
+        choices: ["Purple", "Green", "Navy", "Orange", "Yellow", "Red"]
       }
+
+      //If they include an @ sign re prompt (Or if the username is in the incorrect format)
     ]);
     console.log(response);
     const gitHubUsername = response.github;
@@ -37,8 +38,14 @@ async function promptUser() {
       console.log("Saved!");
     });
   } catch (error) {
+    console.log("error!");
     console.error(error);
+    promptUser();
   }
+
+  //   const userLocation = await axios.get(
+  //       ``
+  //   )
 }
 
 function writeHTML({ data }, color) {
@@ -81,10 +88,10 @@ function writeHTML({ data }, color) {
             <div class="user-photo text-center ">
               <img src="${data.avatar_url}" alt="User photo" width="150px" />
             </div>
-            <br><br>
+            <br>
             <h3 class="card-title text-center">Hi!</h3>
             <h3 class="card-title text-center">My Name is ${data.name}!</h3>
-            <br />
+            
             <br />
             <h6 class="card-subtitle mb-2 location text-center ">
              ${data.location}

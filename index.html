@@ -13,20 +13,34 @@
     />
     <style>
       .card {
-        background-color: navy;
+        background-color: #181915;
         color: white;
-        font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-        font-size: 26px;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 30px;
+        border: 1px solid;
+        padding: 10px;
+        box-shadow: 35px 30px blue;
       }
 
       h6 {
         color: white;
-        font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-        font-size: 19xp;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 22px;
       }
 
+      h5 {
+        letter-spacing: 1px;
+        font-size: 30px;
+      }
+      .info-cards {
+        width: 400px;
+        height: 150px;
+      }
       body {
-        background-color: papayawhip;
+        background-color: #e7e6ea;
+      }
+      img {
+        border-radius: 30%;
       }
     </style>
   </head>
@@ -34,15 +48,20 @@
     <div class="main">
       <div class="container">
         <div class="card user-info p-5">
-          <div class="user-photo text-center ">
-            <img src="IMAGE-LINK-HERE" alt="User photo" width="100px" />
+          <div class="user-photo text-center">
+            <img
+              src="https://static.scientificamerican.com/sciam/cache/file/BCC3BD1E-5DC0-4843-A841706AE575C694_source.jpg?w=590&h=800&39BBF62E-5F96-4C6A-A59590CCF416DA11"
+              alt="User photo"
+              width="200px"
+            />
           </div>
+          <br />
           <h3 class="card-title text-center">Hi!</h3>
           <h3 class="card-title text-center">My Name is Marie Lenac!</h3>
           <br />
-          <br />
+
           <h6 class="card-subtitle mb-2 location text-center ">
-            <a href="https://GOOGLE-LOCATION.com">LOCATION</a>
+            LOCATION
             <a href="https:/GITHUB-LINK.com">GITHUB LINK</a>
             GITHUB USERNAME HERE
           </h6>
@@ -51,17 +70,26 @@
         <div class="row ">
           <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
             <div class="card">
-              <div class="card-body public-repos ">
-                <h5 class="card-title text-center">Public Repositories</h5>
-                <h6 class="card-subtitle mb-2 text-center">1</h6>
+              <div
+                class="card-body public-repos d-flex align-items-center justify-content-center info-cards"
+              >
+                <h5 class="card-title text-center">
+                  Public Repositories<br />
+                  1
+                </h5>
               </div>
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
             <div class="card">
-              <div class="card-body public-repos">
-                <h5 class="card-title text-center">Followers</h5>
-                <h6 class="card-subtitle mb-2 text-center ">1</h6>
+              <div
+                class="card-body followers info-cards d-flex align-items-center justify-content-center"
+              >
+                <h5 class="card-title text-center">
+                  Followers
+                  <br />
+                  1
+                </h5>
               </div>
             </div>
           </div>
@@ -70,17 +98,23 @@
         <div class="row">
           <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
             <div class="card">
-              <div class="card-body public-repos">
-                <h5 class="card-title text-center">GitHub Stars</h5>
-                <h6 class="card-subtitle mb-2 text-center ">1</h6>
+              <div
+                class="card-body github-stars info-cards d-flex align-items-center justify-content-center"
+              >
+                <h5 class="card-title text-center">
+                  GitHub Stars
+                  <br />
+                  1
+                </h5>
               </div>
             </div>
           </div>
           <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
             <div class="card">
-              <div class="card-body public-repos">
-                <h5 class="card-title text-center">Following</h5>
-                <h6 class="card-subtitle mb-2 text-center ">1</h6>
+              <div
+                class="card-body following info-cards d-flex align-items-center justify-content-center"
+              >
+                <h5 class="card-title text-center">Following<br />1</h5>
               </div>
             </div>
           </div>
