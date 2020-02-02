@@ -3,7 +3,8 @@
 const { writeFile } = require("fs");
 const axios = require("axios");
 const inquirer = require("inquirer");
-// const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer");
+const { resolve } = require("path");
 
 async function promptUser() {
   try {
@@ -17,10 +18,8 @@ async function promptUser() {
         type: "list",
         name: "favecolor",
         message: "Choose Your Favorite Color",
-        choices: ["Purple", "Green", "Navy", "Orange", "Yellow", "Red"]
+        choices: ["Purple", "Green", "Navy", "Red"]
       }
-
-      //If they include an @ sign re prompt (Or if the username is in the incorrect format)
     ]);
     console.log(response);
     const gitHubUsername = response.github;
@@ -30,25 +29,46 @@ async function promptUser() {
       `https://api.github.com/users/${gitHubUsername}`
     );
     console.log(userGitHub);
+    const userStars = await axios.get(
+      `https://api.github.com/users/${gitHubUsername}/starred`
+    );
 
-    writeFile("devInfo.html", writeHTML(userGitHub, backgroundColor), function(
-      err
-    ) {
-      if (err) throw err;
-      console.log("Saved!");
-    });
+    writeFile(
+      "devInfo.html",
+      await writeHTML(userGitHub, backgroundColor, userStars),
+      function(err) {
+        if (err) throw err;
+        console.log("Saved!");
+        printPDF();
+      }
+    );
   } catch (error) {
     console.log("error!");
     console.error(error);
     promptUser();
   }
-
-  //   const userLocation = await axios.get(
-  //       ``
-  //   )
 }
 
-function writeHTML({ data }, color) {
+async function printPDF() {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.emulateMedia("screen");
+  await page.setBypassCSP(true);
+  const absPath = resolve("devInfo.html");
+  await page.goto("file://" + absPath);
+  const pdf = await page.pdf({
+    format: "Letter",
+    path: "devInfo.pdf",
+    printBackground: true
+  });
+
+  await browser.close();
+  return pdf;
+}
+
+// writePDF("devInfo.pdf", printPDF())
+
+function writeHTML({ data }, color, userStars) {
   return `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -66,73 +86,119 @@ function writeHTML({ data }, color) {
         .card {
           background-color: ${color};
           color: white;
-          font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-          font-size: 26px;
+          font-family: Georgia, "Times New Roman", Times, serif;
+          border: 1px solid;
+          box-shadow: 15px 20px #181915;
+          opacity: 80%;
         }
   
+        .user-info{
+            margin-top:5px;
+            height:375px;
+            align-items: center;
+            justify-content: start;
+            
+        }
+
+        h3{
+            font-sixe: 18px;
+        }
         h6 {
           color: white;
-          font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-          font-size: 19xp;
+          font-family: Georgia, "Times New Roman", Times, serif;
+          font-size: 18px;
         }
   
-        body {
-          background-color: papayawhip;
+        h5 {
+          letter-spacing: 1px;
+          font-size: 20px;
         }
+        .info-cards {
+          width: 300px;
+          height: 75px;
+        }
+        body {
+          background-color: #e7e6ea;
+        -webkit-print-color-adjust: exact;
+        }
+
+        img {
+          border-radius: 30%;
+        }
+
       </style>
     </head>
     <body>
       <div class="main">
         <div class="container">
-          <div class="card user-info p-5">
-            <div class="user-photo text-center ">
-              <img src="${data.avatar_url}" alt="User photo" width="150px" />
+          <div class="card user-info align-items-top p-5">
+            <div class="user-photo text-center">
+              <img
+                src="${data.avatar_url}"
+                alt="User photo"
+                width="200px"
+              />
             </div>
-            <br>
+           
             <h3 class="card-title text-center">Hi!</h3>
             <h3 class="card-title text-center">My Name is ${data.name}!</h3>
-            
-            <br />
+           
+  
             <h6 class="card-subtitle mb-2 location text-center ">
-             ${data.location}
-              <a href="${data.html_url}">Here's my Github</a>
+            ${data.location}
+              <a href="${data.html_url}">Visit my GitHub</a>
               @${data.login}
             </h6>
           </div>
   
           <div class="row ">
-            <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center p-5">
               <div class="card">
-                <div class="card-body public-repos ">
-                  <h5 class="card-title text-center">Public Repositories</h5>
-                  <h6 class="card-subtitle mb-2 text-center">${data.public_repos}</h6>
+                <div
+                  class="card-body public-repos d-flex align-items-center justify-content-center info-cards"
+                >
+                  <h5 class="card-title text-center">
+                    Public Repositories<br />
+                    ${data.public_repos}
+                  </h5>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
-              <div class="card">
-                <div class="card-body public-repos">
-                  <h5 class="card-title text-center">Followers</h5>
-                  <h6 class="card-subtitle mb-2 text-center ">${data.followers}</h6>
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center p-5">
+              <div class="card"> 
+                <div
+                  class="card-body followers info-cards d-flex align-items-center justify-content-center"
+                >
+                  <h5 class="card-title text-center">
+                    Followers
+                    <br />
+                    ${data.followers}
+                  </h5>
                 </div>
               </div>
             </div>
           </div>
   
           <div class="row">
-            <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center p-5">
               <div class="card">
-                <div class="card-body public-repos">
-                  <h5 class="card-title text-center">GitHub Stars</h5>
-                  <h6 class="card-subtitle mb-2 text-center ">${data.public_gists}</h6>
+                <div
+                  class="card-body github-stars info-cards d-flex align-items-center justify-content-center"
+                >
+                  <h5 class="card-title text-center">
+                    GitHub Stars
+                    <br />
+                    ${userStars.data.length}
+                  </h5>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 col-sm-12 d-flex justify-content-around p-5">
+            <div class="col-lg-6 col-sm-12 d-flex justify-content-center p-5">
               <div class="card">
-                <div class="card-body public-repos">
-                  <h5 class="card-title text-center">Following</h5>
-                  <h6 class="card-subtitle mb-2 text-center ">${data.following}</h6>
+                <div
+                  class="card-body following info-cards d-flex align-items-center justify-content-center"
+                >
+                  <h5 class="card-title text-center">Following<br />${data.following}</h5>
                 </div>
               </div>
             </div>
