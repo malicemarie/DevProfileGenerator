@@ -14,6 +14,8 @@ This will provide a quick way to search for a prospects current and past work in
 2. Enter a GitHub username
 3. Choose your favorite color (or for organization purposes).
 4. Open PDF and save to a local folder on your computer
-   \*You can view the PDF in the browser or your own PDF viewer.
+   - You can view the PDF in the browser or your own PDF viewer.
 
 ## Example
+
+![alt text](assets/example.png "Functionality back end")
