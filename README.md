@@ -18,4 +18,4 @@ This will provide a quick way to search for a prospects current and past work in
 
 ## Example
 
-![alt text](assets/example.png "Functionality back end")
+![alt text](assets/example.png)
